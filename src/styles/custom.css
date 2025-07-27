@@ -1,0 +1,8 @@
+.gradient-bg {
+  background: linear-gradient(135deg, #1a73e8, #3b5998);
+}
+
+html.dark .gradient-bg {
+  background: none;
+  background-color: #1a202c; /* Tailwind's gray-900 */
+}
