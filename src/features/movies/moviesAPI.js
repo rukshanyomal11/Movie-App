@@ -23,3 +23,11 @@ export const fetchMovieDetails = async (id) => {
   if (!response.ok) throw new Error('Failed to fetch movie details');
   return response.json();
 };
+
+export const fetchMovieVideos = async (id) => {
+  const response = await fetch(
+    `${TMDB_API_BASE_URL}/movie/${id}/videos?api_key=${TMDB_API_KEY}`
+  );
+  if (!response.ok) throw new Error('Failed to fetch movie videos');
+  return response.json();
+};

@@ -16,7 +16,7 @@ const Navbar = ({ theme }) => {
   ];
 
   return (
-    <nav className="gradient-bg text-white shadow-md sticky top-0 z-50 dark:bg-gray-900 dark:text-white">
+    <nav className="bg-[linear-gradient(to_right,#010101,#1a1a1a)] text-white shadow-md sticky top-0 z-50 dark:bg-gray-900 dark:text-white">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <NavLink to="/" className="flex items-center space-x-2">
           <img src={logo} alt="Logo" className="h-8" />

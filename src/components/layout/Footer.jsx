@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-6">
+    <footer className="bg-[linear-gradient(to_right,#010101,#1a1a1a)] text-white py-6">
       <div className="container mx-auto px-4 text-center">
         <p>&copy; {new Date().getFullYear()} MovieApp. All rights reserved.</p>
         <div className="mt-2 space-x-4">

@@ -4,23 +4,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../components/common/Loading';
 import Error from '../components/common/Error';
 import TrailerPlayer from '../components/content/TrailerPlayer';
-import { getMovieDetails } from '../features/movies/moviesSlice';
+import { getMovieDetails, getMovieVideos } from '../features/movies/moviesSlice';
 import { getImageUrl } from '../utils/helpers';
 import { formatDate, formatRating } from '../utils/formatters';
 
 const MovieDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { details, status, error } = useSelector((state) => state.movies);
+  const { details, videos, status, error } = useSelector((state) => state.movies);
   const movie = details[id];
+  const movieVideos = videos[id] || [];
 
   useEffect(() => {
     dispatch(getMovieDetails(id));
+    dispatch(getMovieVideos(id));
   }, [dispatch, id]);
 
   if (status === 'loading') return <Loading />;
   if (status === 'failed') return <Error message={error} />;
   if (!movie) return <Error message="Movie not found" />;
+
+  // Find the YouTube trailer video key
+  const trailer = movieVideos.find(
+    (video) => video.type === 'Trailer' && video.site === 'YouTube'
+  );
+  const videoKey = trailer ? trailer.key : null;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -36,7 +44,7 @@ const MovieDetail = () => {
           <p className="mb-2"><strong>Release Date:</strong> {formatDate(movie.release_date)}</p>
           <p className="mb-2"><strong>Rating:</strong> {formatRating(movie.vote_average)}</p>
           <p className="mb-4"><strong>Genres:</strong> {movie.genres.map((g) => g.name).join(', ')}</p>
-          <TrailerPlayer videoKey={null} />
+          <TrailerPlayer videoKey={videoKey} />
         </div>
       </div>
     </div>
