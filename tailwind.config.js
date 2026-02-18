@@ -8,8 +8,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Bebas Neue"', 'ui-sans-serif', 'system-ui'],
-        sans: ['"Manrope"', 'ui-sans-serif', 'system-ui'],
+        display: ['"Newsreader"', '"Iowan Old Style"', '"Palatino Linotype"', 'serif'],
+        sans: ['"Space Grotesk"', '"Noto Sans"', '"Helvetica Neue"', 'sans-serif'],
       },
       colors: {
         primary: {

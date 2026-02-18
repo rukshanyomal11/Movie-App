@@ -37,7 +37,7 @@ const MovieDetail = () => {
           <img
             src={getImageUrl(movie.poster_path, 'w500')}
             alt={movie.title}
-            className="w-full rounded-2xl border border-white/10 shadow-[0_25px_60px_-45px_rgba(0,0,0,0.8)] lg:w-1/3"
+            className="w-full rounded-2xl border border-slate-200/70 shadow-[0_25px_60px_-45px_rgba(15,23,42,0.45)] lg:w-1/3 dark:border-white/10 dark:shadow-[0_25px_60px_-45px_rgba(0,0,0,0.8)]"
           />
           <div className="lg:w-2/3">
             <p className="page-kicker">Movie</p>
@@ -45,19 +45,19 @@ const MovieDetail = () => {
             <p className="page-subtitle mt-4">{movie.overview}</p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div className="soft-panel">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Release</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Release</p>
                 <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
                   {formatDate(movie.release_date)}
                 </p>
               </div>
               <div className="soft-panel">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Rating</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Rating</p>
                 <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
                   {formatRating(movie.vote_average)}
                 </p>
               </div>
               <div className="soft-panel sm:col-span-2">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Genres</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Genres</p>
                 <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
                   {movie.genres.map((g) => g.name).join(', ')}
                 </p>

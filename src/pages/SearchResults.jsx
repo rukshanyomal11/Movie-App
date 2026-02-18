@@ -42,7 +42,7 @@ const SearchResults = () => {
             </p>
           </div>
           <div className="soft-panel">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Tip</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Tip</p>
             <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
               Try a different name, title, or genre to refine your results.
             </p>

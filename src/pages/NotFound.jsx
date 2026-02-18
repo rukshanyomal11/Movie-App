@@ -10,7 +10,7 @@ const NotFound = () => {
         <div className="mt-8 flex justify-center">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-400 to-amber-500 px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-900 shadow-[0_20px_40px_-25px_rgba(245,158,11,0.9)] transition hover:from-amber-300 hover:to-amber-400"
+            className="inline-flex items-center justify-center rounded-full border border-amber-400/60 bg-amber-400/90 px-6 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-900 shadow-[0_20px_40px_-25px_rgba(251,191,36,0.75)] transition hover:bg-amber-300"
           >
             Back to Home
           </Link>

@@ -111,7 +111,7 @@ const SearchBar = () => {
     <div className="relative">
       <form
         onSubmit={handleSearch}
-        className="flex items-center gap-2 rounded-full border border-slate-200/40 bg-white/70 px-3 py-2 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5"
+        className="flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/80 px-3 py-2 shadow-[0_12px_40px_-30px_rgba(15,23,42,0.25)] backdrop-blur dark:border-white/10 dark:bg-slate-900/60"
       >
         <input
           type="text"
@@ -127,11 +127,11 @@ const SearchBar = () => {
             }
           }}
           placeholder="Search movies, actors..."
-          className="w-40 bg-transparent text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none sm:w-56 dark:text-slate-100 dark:placeholder:text-slate-400"
+          className="w-40 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none sm:w-56 dark:text-slate-100 dark:placeholder:text-slate-500"
         />
         <button
           type="submit"
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-400 text-slate-900 transition hover:bg-amber-300"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-400 text-slate-900 shadow-[0_10px_25px_-15px_rgba(251,191,36,0.9)] transition hover:bg-amber-300"
           aria-label="Search"
         >
           <img src={searchIcon} alt="Search" className="h-4 w-4 dark:invert" />
@@ -139,7 +139,7 @@ const SearchBar = () => {
       </form>
 
       {isDropdownOpen && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-2xl border border-slate-200/60 bg-white/95 p-2 text-xs shadow-xl backdrop-blur dark:border-white/10 dark:bg-slate-950/95">
+        <div className="absolute left-0 right-0 top-full z-50 mt-2 rounded-2xl border border-slate-200/70 bg-white/95 p-2 text-xs shadow-[0_18px_50px_-35px_rgba(15,23,42,0.35)] backdrop-blur dark:border-white/10 dark:bg-slate-950/95">
           {isLoading && <div className="px-3 py-2 text-slate-500 dark:text-slate-400">Searching...</div>}
 
           {!isLoading && suggestions.length === 0 && (
@@ -156,12 +156,12 @@ const SearchBar = () => {
                     e.preventDefault();
                     handleSuggestionSelect(suggestion);
                   }}
-                  className="flex items-center justify-between rounded-xl px-3 py-2 text-left text-sm text-slate-900 transition hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-white/5"
+                  className="flex items-center justify-between rounded-xl px-3 py-2 text-left text-sm text-slate-900 transition hover:bg-amber-50/70 dark:text-slate-100 dark:hover:bg-white/5"
                 >
                   <span className="font-medium">{suggestion.label}</span>
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
                     {suggestion.type}
-                    {suggestion.meta ? ` • ${suggestion.meta}` : ''}
+                    {suggestion.meta ? ` - ${suggestion.meta}` : ''}
                   </span>
                 </button>
               ))}
@@ -171,7 +171,7 @@ const SearchBar = () => {
                   e.preventDefault();
                   handleViewAll();
                 }}
-                className="rounded-xl px-3 py-2 text-left text-xs uppercase tracking-[0.3em] text-amber-600 transition hover:bg-amber-50 dark:text-amber-300 dark:hover:bg-white/5"
+                className="rounded-xl px-3 py-2 text-left text-xs uppercase tracking-[0.3em] text-amber-700 transition hover:bg-amber-50/70 dark:text-amber-300 dark:hover:bg-white/5"
               >
                 View all results for "{trimmedQuery}"
               </button>

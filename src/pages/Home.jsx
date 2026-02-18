@@ -38,12 +38,12 @@ const Home = () => {
             </div>
           </div>
           <div className="soft-panel">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Featured</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Featured</p>
             <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
               Jump into hand-picked lists, new trailers, and fresh discoveries updated every day.
             </p>
             <div className="mt-6 glow-divider"></div>
-            <div className="mt-6 grid grid-cols-2 gap-4 text-xs uppercase tracking-[0.2em] text-slate-400">
+            <div className="mt-6 grid grid-cols-2 gap-4 text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
               <div>
                 <p className="font-display text-2xl text-slate-900 dark:text-slate-100">Spotlight</p>
                 <p>Curated picks</p>

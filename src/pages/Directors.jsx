@@ -30,12 +30,12 @@ const Directors = () => {
             </p>
           </div>
           <div className="soft-panel">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Spotlight</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Spotlight</p>
             <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
               Discover visionary creators, acclaimed auteurs, and the voices shaping film today.
             </p>
             <div className="mt-6 glow-divider"></div>
-            <p className="mt-4 text-xs text-slate-400">Page {page}</p>
+            <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">Page {page}</p>
           </div>
         </div>
       </div>

@@ -27,7 +27,7 @@ const Categories = () => {
             </p>
           </div>
           <div className="soft-panel">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Featured Genre</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Featured Genre</p>
             <p className="mt-3 font-display text-3xl text-slate-900 dark:text-slate-100">
               {GENRES[0].name}
             </p>

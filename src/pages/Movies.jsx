@@ -29,7 +29,7 @@ const Movies = () => {
             </p>
           </div>
           <div className="soft-panel">
-            <label htmlFor="genre" className="text-xs uppercase tracking-[0.3em] text-slate-400">
+            <label htmlFor="genre" className="text-xs uppercase tracking-[0.3em] text-slate-500">
               Select Genre
             </label>
             <select
@@ -39,20 +39,20 @@ const Movies = () => {
                 setSelectedGenre(Number(e.target.value));
                 setPage(1);
               }}
-              className="mt-3 w-full rounded-xl border border-slate-200/60 bg-white/80 px-4 py-3 text-sm text-slate-900 focus:border-amber-400/60 focus:outline-none dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
+              className="mt-3 w-full rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm text-slate-700 focus:border-amber-400/60 focus:outline-none dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
             >
               {GENRES.map((genre) => (
                 <option
                   key={genre.id}
                   value={genre.id}
-                  className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100"
+                  className="bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-100"
                 >
                   {genre.name}
                 </option>
               ))}
             </select>
-            <p className="mt-3 text-xs text-slate-400">
-              Page {page} • {GENRES.find((g) => g.id === selectedGenre)?.name}
+            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+              Page {page} | {GENRES.find((g) => g.id === selectedGenre)?.name}
             </p>
           </div>
         </div>

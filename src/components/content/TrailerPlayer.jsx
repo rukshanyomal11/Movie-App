@@ -7,7 +7,7 @@ const TrailerPlayer = ({ videoKey }) => {
 
   return (
     <div
-      className="relative w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.8)]"
+      className="relative w-full overflow-hidden rounded-2xl border border-slate-200/70 shadow-[0_20px_60px_-40px_rgba(15,23,42,0.45)] dark:border-white/10 dark:shadow-[0_20px_60px_-40px_rgba(0,0,0,0.8)]"
       style={{ paddingBottom: '56.25%' }}
     >
       <iframe

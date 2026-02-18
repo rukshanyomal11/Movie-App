@@ -28,7 +28,7 @@ const DirectorDetail = () => {
           <img
             src={getImageUrl(director.profile_path, 'w500')}
             alt={director.name}
-            className="w-full rounded-2xl border border-white/10 shadow-[0_25px_60px_-45px_rgba(0,0,0,0.8)] lg:w-1/3"
+            className="w-full rounded-2xl border border-slate-200/70 shadow-[0_25px_60px_-45px_rgba(15,23,42,0.45)] lg:w-1/3 dark:border-white/10 dark:shadow-[0_25px_60px_-45px_rgba(0,0,0,0.8)]"
           />
           <div className="lg:w-2/3">
             <p className="page-kicker">Director</p>
@@ -36,13 +36,13 @@ const DirectorDetail = () => {
             <p className="page-subtitle mt-4">{director.biography || 'No biography available.'}</p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <div className="soft-panel">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Born</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Born</p>
                 <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
                   {formatDate(director.birthday)}
                 </p>
               </div>
               <div className="soft-panel">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Department</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Department</p>
                 <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">Directing</p>
               </div>
             </div>

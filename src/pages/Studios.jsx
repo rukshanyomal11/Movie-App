@@ -11,7 +11,7 @@ const Studios = () => {
             </p>
           </div>
           <div className="soft-panel">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">In Progress</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">In Progress</p>
             <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
               Studio browsing is being curated. Expect deep dives and spotlights soon.
             </p>
