@@ -18,43 +18,69 @@ const Movies = () => {
   }, [dispatch, selectedGenre, page]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Movies</h1>
-
-      <div className="mb-6">
-        <label htmlFor="genre" className="mr-2">Select Genre:</label>
-        <select
-          id="genre"
-          value={selectedGenre}
-          onChange={(e) => {
-            setSelectedGenre(Number(e.target.value));
-            setPage(1);
-          }}
-          className="px-3 py-1 rounded-md border text-black"
-        >
-          {GENRES.map((genre) => (
-            <option key={genre.id} value={genre.id}>{genre.name}</option>
-          ))}
-        </select>
+    <div className="page-shell">
+      <div className="page-hero">
+        <div className="hero-grid">
+          <div>
+            <p className="page-kicker">Browse</p>
+            <h1 className="page-title">Movies</h1>
+            <p className="page-subtitle mt-4">
+              Choose a genre and dive into curated selections tailored to your mood.
+            </p>
+          </div>
+          <div className="soft-panel">
+            <label htmlFor="genre" className="text-xs uppercase tracking-[0.3em] text-slate-400">
+              Select Genre
+            </label>
+            <select
+              id="genre"
+              value={selectedGenre}
+              onChange={(e) => {
+                setSelectedGenre(Number(e.target.value));
+                setPage(1);
+              }}
+              className="mt-3 w-full rounded-xl border border-slate-200/60 bg-white/80 px-4 py-3 text-sm text-slate-900 focus:border-amber-400/60 focus:outline-none dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
+            >
+              {GENRES.map((genre) => (
+                <option
+                  key={genre.id}
+                  value={genre.id}
+                  className="bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100"
+                >
+                  {genre.name}
+                </option>
+              ))}
+            </select>
+            <p className="mt-3 text-xs text-slate-400">
+              Page {page} • {GENRES.find((g) => g.id === selectedGenre)?.name}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {status === 'loading' && <Loading />}
-      {status === 'failed' && <Error message={error} />}
-      {status === 'succeeded' && (
-        <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
-            {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </div>
-          <div className="flex justify-center space-x-4">
-            <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
-              Previous
-            </Button>
-            <Button onClick={() => setPage((prev) => prev + 1)}>Next</Button>
-          </div>
-        </>
-      )}
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">Explore Titles</h2>
+          <span className="badge">Genre Picks</span>
+        </div>
+        {status === 'loading' && <Loading />}
+        {status === 'failed' && <Error message={error} />}
+        {status === 'succeeded' && (
+          <>
+            <div className="grid-cards mb-6">
+              {movies.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </div>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
+                Previous
+              </Button>
+              <Button onClick={() => setPage((prev) => prev + 1)}>Next</Button>
+            </div>
+          </>
+        )}
+      </section>
     </div>
   );
 };

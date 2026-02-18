@@ -31,22 +31,49 @@ const MovieDetail = () => {
   const videoKey = trailer ? trailer.key : null;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row gap-8">
-        <img
-          src={getImageUrl(movie.poster_path, 'w500')}
-          alt={movie.title}
-          className="w-full md:w-1/3 rounded-lg"
-        />
-        <div className="md:w-2/3">
-          <h1 className="text-3xl font-bold mb-4">{movie.title}</h1>
-          <p className="text-gray-600 mb-2">{movie.overview}</p>
-          <p className="mb-2"><strong>Release Date:</strong> {formatDate(movie.release_date)}</p>
-          <p className="mb-2"><strong>Rating:</strong> {formatRating(movie.vote_average)}</p>
-          <p className="mb-4"><strong>Genres:</strong> {movie.genres.map((g) => g.name).join(', ')}</p>
-          <TrailerPlayer videoKey={videoKey} />
+    <div className="page-shell">
+      <div className="page-hero">
+        <div className="flex flex-col gap-8 lg:flex-row">
+          <img
+            src={getImageUrl(movie.poster_path, 'w500')}
+            alt={movie.title}
+            className="w-full rounded-2xl border border-white/10 shadow-[0_25px_60px_-45px_rgba(0,0,0,0.8)] lg:w-1/3"
+          />
+          <div className="lg:w-2/3">
+            <p className="page-kicker">Movie</p>
+            <h1 className="page-title mt-3">{movie.title}</h1>
+            <p className="page-subtitle mt-4">{movie.overview}</p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="soft-panel">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Release</p>
+                <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
+                  {formatDate(movie.release_date)}
+                </p>
+              </div>
+              <div className="soft-panel">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Rating</p>
+                <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
+                  {formatRating(movie.vote_average)}
+                </p>
+              </div>
+              <div className="soft-panel sm:col-span-2">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Genres</p>
+                <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
+                  {movie.genres.map((g) => g.name).join(', ')}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">Trailer</h2>
+          <span className="badge">Watch</span>
+        </div>
+        <TrailerPlayer videoKey={videoKey} />
+      </section>
     </div>
   );
 };

@@ -4,15 +4,25 @@ import { getImageUrl, truncateText } from '../../utils/helpers';
 
 const DirectorCard = ({ director }) => {
   return (
-<Link to={`/director/${director.id}`} className="block rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow bg-white dark:bg-gray-800">
-      <img
-        src={getImageUrl(director.profile_path)}
-        alt={director.name}
-        className="w-full h-64 object-cover"
-      />
+    <Link
+      to={`/director/${director.id}`}
+      className="group block overflow-hidden rounded-2xl border border-white/10 bg-white/80 shadow-[0_25px_60px_-45px_rgba(0,0,0,0.7)] transition hover:-translate-y-1 hover:border-amber-400/60 dark:bg-slate-900/60"
+    >
+      <div className="relative">
+        <img
+          src={getImageUrl(director.profile_path)}
+          alt={director.name}
+          className="h-64 w-full object-cover transition duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent opacity-70"></div>
+      </div>
       <div className="p-4">
-        <h3 className="text-lg font-semibold dark:text-gray-300">{truncateText(director.name, 20)}</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400">Director</p>
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          {truncateText(director.name, 20)}
+        </h3>
+        <p className="text-xs uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
+          Director
+        </p>
       </div>
     </Link>
   );

@@ -16,25 +16,50 @@ const Actors = () => {
   }, [dispatch, page]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Actors</h1>
-      {status === 'loading' && <Loading />}
-      {status === 'failed' && <Error message={error} />}
-      {status === 'succeeded' && (
-        <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
-            {actors.map((actor) => (
-              <ActorCard key={actor.id} actor={actor} />
-            ))}
+    <div className="page-shell">
+      <div className="page-hero">
+        <div className="hero-grid">
+          <div>
+            <p className="page-kicker">Cast</p>
+            <h1 className="page-title">Actors</h1>
+            <p className="page-subtitle mt-4">
+              Follow the stars lighting up the screen and their most loved performances.
+            </p>
           </div>
-          <div className="flex justify-center space-x-4">
-            <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
-              Previous
-            </Button>
-            <Button onClick={() => setPage((prev) => prev + 1)}>Next</Button>
+          <div className="soft-panel">
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Highlights</p>
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
+              Browse trending performers, award winners, and rising talent shaping cinema today.
+            </p>
+            <div className="mt-6 glow-divider"></div>
+            <p className="mt-4 text-xs text-slate-400">Page {page}</p>
           </div>
-        </>
-      )}
+        </div>
+      </div>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">Popular Actors</h2>
+          <span className="badge">Trending</span>
+        </div>
+        {status === 'loading' && <Loading />}
+        {status === 'failed' && <Error message={error} />}
+        {status === 'succeeded' && (
+          <>
+            <div className="grid-cards mb-6">
+              {actors.map((actor) => (
+                <ActorCard key={actor.id} actor={actor} />
+              ))}
+            </div>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
+                Previous
+              </Button>
+              <Button onClick={() => setPage((prev) => prev + 1)}>Next</Button>
+            </div>
+          </>
+        )}
+      </section>
     </div>
   );
 };

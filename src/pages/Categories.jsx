@@ -16,18 +16,43 @@ const Categories = () => {
   }, [dispatch]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Categories</h1>
-      <h2 className="text-2xl font-semibold mb-4">{GENRES[0].name}</h2>
-      {status === 'loading' && <Loading />}
-      {status === 'failed' && <Error message={error} />}
-      {status === 'succeeded' && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {movies.slice(0, 10).map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
+    <div className="page-shell">
+      <div className="page-hero">
+        <div className="hero-grid">
+          <div>
+            <p className="page-kicker">Collections</p>
+            <h1 className="page-title">Categories</h1>
+            <p className="page-subtitle mt-4">
+              Dive into themed selections crafted to match your mood and curiosity.
+            </p>
+          </div>
+          <div className="soft-panel">
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Featured Genre</p>
+            <p className="mt-3 font-display text-3xl text-slate-900 dark:text-slate-100">
+              {GENRES[0].name}
+            </p>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+              A spotlight list to kick off your next movie night.
+            </p>
+          </div>
         </div>
-      )}
+      </div>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">{GENRES[0].name} Picks</h2>
+          <span className="badge">Curated</span>
+        </div>
+        {status === 'loading' && <Loading />}
+        {status === 'failed' && <Error message={error} />}
+        {status === 'succeeded' && (
+          <div className="grid-cards">
+            {movies.slice(0, 10).map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 };

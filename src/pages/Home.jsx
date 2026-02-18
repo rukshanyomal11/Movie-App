@@ -22,13 +22,50 @@ const Home = () => {
   }, [dispatch]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <section className="mb-12">
-        <h2 className="text-2xl font-bold mb-4">Popular Movies</h2>
+    <div className="page-shell">
+      <div className="page-hero">
+        <div className="hero-grid">
+          <div>
+            <p className="page-kicker">Now Streaming</p>
+            <h1 className="page-title">Your Front Row to Cinema</h1>
+            <p className="page-subtitle mt-4">
+              Discover trending films, iconic performances, and visionary directors curated for you.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <span className="badge">Trending</span>
+              <span className="badge">New Releases</span>
+              <span className="badge">Award Winners</span>
+            </div>
+          </div>
+          <div className="soft-panel">
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Featured</p>
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
+              Jump into hand-picked lists, new trailers, and fresh discoveries updated every day.
+            </p>
+            <div className="mt-6 glow-divider"></div>
+            <div className="mt-6 grid grid-cols-2 gap-4 text-xs uppercase tracking-[0.2em] text-slate-400">
+              <div>
+                <p className="font-display text-2xl text-slate-900 dark:text-slate-100">Spotlight</p>
+                <p>Curated picks</p>
+              </div>
+              <div>
+                <p className="font-display text-2xl text-slate-900 dark:text-slate-100">Premieres</p>
+                <p>Fresh drops</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">Popular Movies</h2>
+          <span className="badge">Top 10</span>
+        </div>
         {movieStatus === 'loading' && <Loading />}
         {movieStatus === 'failed' && <Error message={movieError} />}
         {movieStatus === 'succeeded' && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="grid-cards">
             {movies.slice(0, 10).map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
@@ -36,12 +73,15 @@ const Home = () => {
         )}
       </section>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-bold mb-4">Popular Actors</h2>
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">Popular Actors</h2>
+          <span className="badge">Fan Favorites</span>
+        </div>
         {actorStatus === 'loading' && <Loading />}
         {actorStatus === 'failed' && <Error message={actorError} />}
         {actorStatus === 'succeeded' && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="grid-cards">
             {actors.slice(0, 10).map((actor) => (
               <ActorCard key={actor.id} actor={actor} />
             ))}
@@ -49,12 +89,15 @@ const Home = () => {
         )}
       </section>
 
-      <section>
-        <h2 className="text-2xl font-bold mb-4">Popular Directors</h2>
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">Popular Directors</h2>
+          <span className="badge">Visionaries</span>
+        </div>
         {directorStatus === 'loading' && <Loading />}
         {directorStatus === 'failed' && <Error message={directorError} />}
         {directorStatus === 'succeeded' && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="grid-cards">
             {directors.slice(0, 10).map((director) => (
               <DirectorCard key={director.id} director={director} />
             ))}

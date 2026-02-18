@@ -22,18 +22,33 @@ const ActorDetail = () => {
   if (!actor) return <Error message="Actor not found" />;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row gap-8">
-        <img
-          src={getImageUrl(actor.profile_path, 'w500')}
-          alt={actor.name}
-          className="w-full md:w-1/3 rounded-lg"
-        />
-        <div className="md:w-2/3">
-          <h1 className="text-3xl font-bold mb-4">{actor.name}</h1>
-          <p className="text-gray-600 mb-2">{actor.biography || 'No biography available.'}</p>
-          <p className="mb-2"><strong>Born:</strong> {formatDate(actor.birthday)}</p>
-          <p className="mb-2"><strong>Department:</strong> {actor.known_for_department || 'Acting'}</p>
+    <div className="page-shell">
+      <div className="page-hero">
+        <div className="flex flex-col gap-8 lg:flex-row">
+          <img
+            src={getImageUrl(actor.profile_path, 'w500')}
+            alt={actor.name}
+            className="w-full rounded-2xl border border-white/10 shadow-[0_25px_60px_-45px_rgba(0,0,0,0.8)] lg:w-1/3"
+          />
+          <div className="lg:w-2/3">
+            <p className="page-kicker">Actor</p>
+            <h1 className="page-title mt-3">{actor.name}</h1>
+            <p className="page-subtitle mt-4">{actor.biography || 'No biography available.'}</p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="soft-panel">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Born</p>
+                <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
+                  {formatDate(actor.birthday)}
+                </p>
+              </div>
+              <div className="soft-panel">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Department</p>
+                <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
+                  {actor.known_for_department || 'Acting'}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

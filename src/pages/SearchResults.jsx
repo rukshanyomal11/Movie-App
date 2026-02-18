@@ -20,25 +20,56 @@ const SearchResults = () => {
     }
   }, [dispatch, query]);
 
-  if (!query) return <p className="text-center py-8">Please enter a search query.</p>;
+  if (!query) {
+    return (
+      <div className="page-shell">
+        <div className="empty-panel">
+          <p className="text-sm">Please enter a search query.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Search Results for "{query}"</h1>
-      {status === 'loading' && <Loading />}
-      {status === 'failed' && <Error message={error} />}
-      {status === 'succeeded' && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {results.map((item) => {
-            if (item.media_type === 'movie') return <MovieCard key={item.id} movie={item} />;
-            if (item.media_type === 'person' && item.known_for_department === 'Acting')
-              return <ActorCard key={item.id} actor={item} />;
-            if (item.media_type === 'person' && item.known_for_department === 'Directing')
-              return <DirectorCard key={item.id} director={item} />;
-            return null;
-          })}
+    <div className="page-shell">
+      <div className="page-hero">
+        <div className="hero-grid">
+          <div>
+            <p className="page-kicker">Search</p>
+            <h1 className="page-title">Results</h1>
+            <p className="page-subtitle mt-4">
+              Showing results for <span className="text-amber-700 dark:text-amber-300">"{query}"</span>
+            </p>
+          </div>
+          <div className="soft-panel">
+            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Tip</p>
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">
+              Try a different name, title, or genre to refine your results.
+            </p>
+          </div>
         </div>
-      )}
+      </div>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">Matches</h2>
+          <span className="badge">Curated</span>
+        </div>
+        {status === 'loading' && <Loading />}
+        {status === 'failed' && <Error message={error} />}
+        {status === 'succeeded' && (
+          <div className="grid-cards">
+            {results.map((item) => {
+              if (item.media_type === 'movie') return <MovieCard key={item.id} movie={item} />;
+              if (item.media_type === 'person' && item.known_for_department === 'Acting')
+                return <ActorCard key={item.id} actor={item} />;
+              if (item.media_type === 'person' && item.known_for_department === 'Directing')
+                return <DirectorCard key={item.id} director={item} />;
+              return null;
+            })}
+          </div>
+        )}
+      </section>
     </div>
   );
 };

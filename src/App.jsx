@@ -35,7 +35,7 @@ const App = () => {
     { path: '*', element: <NotFound /> },
   ];
 
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -43,8 +43,10 @@ const App = () => {
       setTheme(savedTheme);
       document.documentElement.classList.toggle('dark', savedTheme === 'dark');
     } else {
-      // Default to light mode
-      document.documentElement.classList.remove('dark');
+      // Default to dark mode for the cinematic theme
+      setTheme('dark');
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
     }
   }, []);
 
