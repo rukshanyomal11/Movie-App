@@ -16,10 +16,14 @@ const Navbar = ({ theme, toggleTheme }) => {
     { to: '/categories', label: 'Categories' },
   ];
 
+  const handleLogoClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 text-white shadow-[0_20px_60px_-40px_rgba(0,0,0,0.8)] backdrop-blur">
       <div className="container mx-auto flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <NavLink to="/" className="flex items-center gap-3">
+        <NavLink to="/" className="flex items-center gap-3" onClick={handleLogoClick}>
           <img src={logo} alt="Logo" className="h-9 w-9 invert" />
           <div className="leading-tight">
             <span className="block font-display text-2xl tracking-[0.18em] text-white">MovieApp</span>
