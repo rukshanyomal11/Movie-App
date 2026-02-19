@@ -8,6 +8,32 @@ import { getActorCredits, getActorDetails } from '../features/actors/actorsSlice
 import { getImageUrl } from '../utils/helpers';
 import { formatDate } from '../utils/formatters';
 
+const splitBiography = (text) => {
+  if (!text) return { intro: '', highlights: [], paragraphs: [] };
+  const normalized = text.replace(/\s+/g, ' ').trim();
+  if (!normalized) return { intro: '', highlights: [], paragraphs: [] };
+
+  const sentences = normalized.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [normalized];
+  const trimmed = sentences.map((sentence) => sentence.trim()).filter(Boolean);
+
+  if (trimmed.length <= 2) {
+    return { intro: normalized, highlights: [], paragraphs: [] };
+  }
+
+  const intro = trimmed.slice(0, 2).join(' ');
+  const remaining = trimmed.slice(2);
+  const highlightCount = remaining.length >= 4 ? Math.min(4, remaining.length) : remaining.length >= 2 ? 2 : 0;
+  const highlights = remaining.slice(0, highlightCount);
+  const rest = remaining.slice(highlightCount);
+
+  const paragraphs = [];
+  for (let i = 0; i < rest.length; i += 3) {
+    paragraphs.push(rest.slice(i, i + 3).join(' '));
+  }
+
+  return { intro, highlights, paragraphs };
+};
+
 const ActorDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -17,6 +43,7 @@ const ActorDetail = () => {
   const actor = details[id];
   const actorCredits = credits[id];
   const creditsState = creditsStatus[id];
+  const biography = splitBiography(actor?.biography);
 
   useEffect(() => {
     dispatch(getActorDetails(id));
@@ -44,13 +71,34 @@ const ActorDetail = () => {
             alt={actor.name}
             className="w-full rounded-2xl border border-slate-200/70 shadow-[0_25px_60px_-45px_rgba(15,23,42,0.45)] lg:w-1/3 dark:border-white/10 dark:shadow-[0_25px_60px_-45px_rgba(0,0,0,0.8)]"
           />
-          <div className="lg:w-2/3">
-            <p className="page-kicker">Actor</p>
-            <h1 className="page-title mt-3">{actor.name}</h1>
-            <p className="page-subtitle mt-4">{actor.biography || 'No biography available.'}</p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="soft-panel">
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Born</p>
+            <div className="lg:w-2/3">
+              <p className="page-kicker">Actor</p>
+              <h1 className="page-title mt-3">{actor.name}</h1>
+              <div className="page-subtitle mt-4 space-y-4">
+                {biography.intro ? (
+                  <p className="leading-relaxed">{biography.intro}</p>
+                ) : (
+                  <p className="leading-relaxed">No biography available.</p>
+                )}
+                {biography.highlights.length > 0 && (
+                  <ul className="space-y-2">
+                    {biography.highlights.map((highlight, index) => (
+                      <li key={`${actor.id}-highlight-${index}`} className="flex gap-3">
+                        <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-amber-400/80 dark:bg-amber-300" />
+                        <span className="leading-relaxed">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {biography.paragraphs.map((paragraph, index) => (
+                  <p key={`${actor.id}-paragraph-${index}`} className="leading-relaxed">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="soft-panel">
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">Born</p>
                 <p className="mt-2 text-sm text-slate-900 dark:text-slate-100">
                   {formatDate(actor.birthday)}
                 </p>
