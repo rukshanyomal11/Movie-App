@@ -3,23 +3,42 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../components/common/Loading';
 import Error from '../components/common/Error';
-import { getDirectorDetails } from '../features/directors/directorsSlice';
+import MovieCard from '../components/content/MovieCard';
+import { getDirectorCredits, getDirectorDetails } from '../features/directors/directorsSlice';
 import { getImageUrl } from '../utils/helpers';
 import { formatDate } from '../utils/formatters';
 
 const DirectorDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { details, status, error } = useSelector((state) => state.directors);
+  const { details, status, error, credits, creditsStatus, creditsError } = useSelector(
+    (state) => state.directors
+  );
   const director = details[id];
+  const directorCredits = credits[id];
+  const creditsState = creditsStatus[id];
 
   useEffect(() => {
     dispatch(getDirectorDetails(id));
+    dispatch(getDirectorCredits(id));
   }, [dispatch, id]);
 
   if (status === 'loading') return <Loading />;
   if (status === 'failed') return <Error message={error} />;
   if (!director) return <Error message="Director not found" />;
+
+  const directedCredits = (directorCredits?.crew || [])
+    .filter((credit) => credit.job === 'Director')
+    .sort((a, b) => {
+      const dateA = new Date(a.release_date || '1900-01-01').getTime();
+      const dateB = new Date(b.release_date || '1900-01-01').getTime();
+      return dateB - dateA;
+    })
+    .reduce((acc, credit) => {
+      if (acc.some((item) => item.id === credit.id)) return acc;
+      acc.push(credit);
+      return acc;
+    }, []);
 
   return (
     <div className="page-shell">
@@ -49,6 +68,27 @@ const DirectorDetail = () => {
           </div>
         </div>
       </div>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">Directed Films</h2>
+          <span className="badge">Filmography</span>
+        </div>
+        {creditsState === 'loading' && <Loading />}
+        {creditsState === 'failed' && <Error message={creditsError[id]} />}
+        {creditsState === 'succeeded' && directedCredits.length === 0 && (
+          <div className="empty-panel">
+            <p className="text-sm">No directing credits available.</p>
+          </div>
+        )}
+        {creditsState === 'succeeded' && directedCredits.length > 0 && (
+          <div className="grid-cards">
+            {directedCredits.map((movie) => (
+              <MovieCard key={movie.id} movie={{ ...movie, title: movie.title || movie.name }} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 };

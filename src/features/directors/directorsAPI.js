@@ -95,3 +95,11 @@ export const fetchDirectorDetails = async (id) => {
   if (!response.ok) throw new Error('Failed to fetch director details');
   return response.json();
 };
+
+export const fetchDirectorMovieCredits = async (id) => {
+  const response = await fetch(
+    `${TMDB_API_BASE_URL}/person/${id}/movie_credits?api_key=${TMDB_API_KEY}`
+  );
+  if (!response.ok) throw new Error('Failed to fetch director credits');
+  return response.json();
+};

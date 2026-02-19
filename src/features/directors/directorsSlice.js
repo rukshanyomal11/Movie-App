@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchPopularDirectors, fetchDirectorDetails } from './directorsAPI';
+import { fetchPopularDirectors, fetchDirectorDetails, fetchDirectorMovieCredits } from './directorsAPI';
 
 export const getPopularDirectors = createAsyncThunk(
   'directors/getPopularDirectors',
@@ -25,11 +25,26 @@ export const getDirectorDetails = createAsyncThunk(
   }
 );
 
+export const getDirectorCredits = createAsyncThunk(
+  'directors/getDirectorCredits',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetchDirectorMovieCredits(id);
+      return { id, credits: response };
+    } catch (error) {
+      return rejectWithValue({ id, message: error.message });
+    }
+  }
+);
+
 const directorsSlice = createSlice({
   name: 'directors',
   initialState: {
     popular: [],
     details: {},
+    credits: {},
+    creditsStatus: {},
+    creditsError: {},
     status: 'idle',
     error: null,
   },
@@ -57,6 +72,19 @@ const directorsSlice = createSlice({
       .addCase(getDirectorDetails.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      .addCase(getDirectorCredits.pending, (state, action) => {
+        state.creditsStatus[action.meta.arg] = 'loading';
+        state.creditsError[action.meta.arg] = null;
+      })
+      .addCase(getDirectorCredits.fulfilled, (state, action) => {
+        state.creditsStatus[action.payload.id] = 'succeeded';
+        state.credits[action.payload.id] = action.payload.credits;
+      })
+      .addCase(getDirectorCredits.rejected, (state, action) => {
+        const id = action.payload?.id ?? action.meta.arg;
+        state.creditsStatus[id] = 'failed';
+        state.creditsError[id] = action.payload?.message || action.error?.message;
       });
   },
 });

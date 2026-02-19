@@ -3,23 +3,37 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../components/common/Loading';
 import Error from '../components/common/Error';
-import { getActorDetails } from '../features/actors/actorsSlice';
+import MovieCard from '../components/content/MovieCard';
+import { getActorCredits, getActorDetails } from '../features/actors/actorsSlice';
 import { getImageUrl } from '../utils/helpers';
 import { formatDate } from '../utils/formatters';
 
 const ActorDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { details, status, error } = useSelector((state) => state.actors);
+  const { details, status, error, credits, creditsStatus, creditsError } = useSelector(
+    (state) => state.actors
+  );
   const actor = details[id];
+  const actorCredits = credits[id];
+  const creditsState = creditsStatus[id];
 
   useEffect(() => {
     dispatch(getActorDetails(id));
+    dispatch(getActorCredits(id));
   }, [dispatch, id]);
 
   if (status === 'loading') return <Loading />;
   if (status === 'failed') return <Error message={error} />;
   if (!actor) return <Error message="Actor not found" />;
+
+  const actingCredits = (actorCredits?.cast || [])
+    .filter((credit) => credit.title)
+    .sort((a, b) => {
+      const dateA = new Date(a.release_date || '1900-01-01').getTime();
+      const dateB = new Date(b.release_date || '1900-01-01').getTime();
+      return dateB - dateA;
+    });
 
   return (
     <div className="page-shell">
@@ -51,6 +65,27 @@ const ActorDetail = () => {
           </div>
         </div>
       </div>
+
+      <section className="section-block">
+        <div className="section-heading">
+          <h2 className="section-title">Acting Credits</h2>
+          <span className="badge">Filmography</span>
+        </div>
+        {creditsState === 'loading' && <Loading />}
+        {creditsState === 'failed' && <Error message={creditsError[id]} />}
+        {creditsState === 'succeeded' && actingCredits.length === 0 && (
+          <div className="empty-panel">
+            <p className="text-sm">No acting credits available.</p>
+          </div>
+        )}
+        {creditsState === 'succeeded' && actingCredits.length > 0 && (
+          <div className="grid-cards">
+            {actingCredits.map((movie) => (
+              <MovieCard key={movie.id} movie={{ ...movie, title: movie.title || movie.name }} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 };
