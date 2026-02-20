@@ -14,6 +14,7 @@ const Navbar = ({ theme, toggleTheme }) => {
     { to: '/actors', label: 'Actors' },
     { to: '/directors', label: 'Directors' },
     { to: '/categories', label: 'Categories' },
+    { to: '/admin', label: 'Admin' },
   ];
 
   const handleLogoClick = () => {

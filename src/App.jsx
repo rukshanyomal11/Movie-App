@@ -14,6 +14,7 @@ import Studios from './pages/Studios';
 import Categories from './pages/Categories';
 import Countries from './pages/Countries';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import SearchResults from './pages/SearchResults';
 import NotFound from './pages/NotFound';
 
@@ -31,6 +32,7 @@ const App = () => {
     { path: '/categories', element: <Categories /> },
     { path: '/countries', element: <Countries /> },
     { path: '/dashboard', element: <Dashboard /> },
+    { path: '/admin', element: <AdminDashboard /> },
     { path: '/search', element: <SearchResults /> },
     { path: '*', element: <NotFound /> },
   ];

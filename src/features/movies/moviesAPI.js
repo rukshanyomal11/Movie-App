@@ -8,6 +8,14 @@ export const fetchPopularMovies = async (page = 1) => {
   return response.json();
 };
 
+export const fetchNowPlayingMovies = async (page = 1) => {
+  const response = await fetch(
+    `${TMDB_API_BASE_URL}/movie/now_playing?api_key=${TMDB_API_KEY}&page=${page}`
+  );
+  if (!response.ok) throw new Error('Failed to fetch now playing movies');
+  return response.json();
+};
+
 export const fetchMoviesByGenre = async (genreId, page = 1) => {
   const response = await fetch(
     `${TMDB_API_BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genreId}&page=${page}`

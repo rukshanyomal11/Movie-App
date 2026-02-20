@@ -1,11 +1,29 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchPopularMovies, fetchMoviesByGenre, fetchMovieDetails, fetchMovieVideos } from './moviesAPI';
+import {
+  fetchPopularMovies,
+  fetchNowPlayingMovies,
+  fetchMoviesByGenre,
+  fetchMovieDetails,
+  fetchMovieVideos,
+} from './moviesAPI';
 
 export const getPopularMovies = createAsyncThunk(
   'movies/getPopularMovies',
   async (page, { rejectWithValue }) => {
     try {
       const response = await fetchPopularMovies(page);
+      return response.results;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getNowPlayingMovies = createAsyncThunk(
+  'movies/getNowPlayingMovies',
+  async (page, { rejectWithValue }) => {
+    try {
+      const response = await fetchNowPlayingMovies(page);
       return response.results;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -53,6 +71,7 @@ const moviesSlice = createSlice({
   name: 'movies',
   initialState: {
     popular: [],
+    nowPlaying: [],
     byGenre: [],
     details: {},
     videos: {},
@@ -70,6 +89,17 @@ const moviesSlice = createSlice({
         state.popular = action.payload;
       })
       .addCase(getPopularMovies.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(getNowPlayingMovies.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getNowPlayingMovies.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.nowPlaying = action.payload;
+      })
+      .addCase(getNowPlayingMovies.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       })

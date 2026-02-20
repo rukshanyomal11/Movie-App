@@ -1,25 +1,42 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import MovieCard from '../components/content/MovieCard';
 import ActorCard from '../components/content/ActorCard';
 import DirectorCard from '../components/content/DirectorCard';
 import Loading from '../components/common/Loading';
 import Error from '../components/common/Error';
-import { getPopularMovies } from '../features/movies/moviesSlice';
+import { getNowPlayingMovies, getPopularMovies } from '../features/movies/moviesSlice';
 import { getPopularActors } from '../features/actors/actorsSlice';
 import { getPopularDirectors } from '../features/directors/directorsSlice';
 
+const MOVIE_FEEDS = [
+  { value: 'popular', label: 'Popular', title: 'Popular Movies', badge: 'Top 10' },
+  { value: 'nowPlaying', label: 'New Releases', title: 'New Movies', badge: 'Now Playing' },
+];
+
 const Home = () => {
   const dispatch = useDispatch();
-  const { popular: movies, status: movieStatus, error: movieError } = useSelector((state) => state.movies);
+  const { popular: movies, nowPlaying, status: movieStatus, error: movieError } = useSelector(
+    (state) => state.movies
+  );
   const { popular: actors, status: actorStatus, error: actorError } = useSelector((state) => state.actors);
   const { popular: directors, status: directorStatus, error: directorError } = useSelector((state) => state.directors);
+  const [movieFeed, setMovieFeed] = useState(MOVIE_FEEDS[0].value);
+  const activeFeed = MOVIE_FEEDS.find((feed) => feed.value === movieFeed) ?? MOVIE_FEEDS[0];
+  const activeMovies = movieFeed === 'nowPlaying' ? nowPlaying : movies;
 
   useEffect(() => {
-    dispatch(getPopularMovies(1));
     dispatch(getPopularActors(1));
     dispatch(getPopularDirectors(1));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (movieFeed === 'nowPlaying') {
+      dispatch(getNowPlayingMovies(1));
+      return;
+    }
+    dispatch(getPopularMovies(1));
+  }, [dispatch, movieFeed]);
 
   return (
     <div className="page-shell">
@@ -59,14 +76,35 @@ const Home = () => {
 
       <section className="section-block">
         <div className="section-heading">
-          <h2 className="section-title">Popular Movies</h2>
-          <span className="badge">Top 10</span>
+          <h2 className="section-title">{activeFeed.title}</h2>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="badge">{activeFeed.badge}</span>
+            <label htmlFor="movie-feed" className="sr-only">
+              Movie feed
+            </label>
+            <select
+              id="movie-feed"
+              value={movieFeed}
+              onChange={(event) => setMovieFeed(event.target.value)}
+              className="rounded-full border border-slate-200/70 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-700 focus:border-amber-400/60 focus:outline-none dark:border-white/10 dark:bg-slate-900/70 dark:text-slate-100"
+            >
+              {MOVIE_FEEDS.map((feed) => (
+                <option
+                  key={feed.value}
+                  value={feed.value}
+                  className="bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                >
+                  {feed.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         {movieStatus === 'loading' && <Loading />}
         {movieStatus === 'failed' && <Error message={movieError} />}
         {movieStatus === 'succeeded' && (
           <div className="grid-cards">
-            {movies.slice(0, 10).map((movie) => (
+            {activeMovies.slice(0, 10).map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
           </div>
