@@ -18,7 +18,7 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/api/admin', adminRoutes);
-app.use('/api', publicRoutes);
+app.use('/api/public', publicRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

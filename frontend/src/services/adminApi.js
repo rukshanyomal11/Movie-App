@@ -41,6 +41,13 @@ export const adminGetMovies = async (token) => {
   });
 };
 
+export const adminDeleteMovie = async (token, movieId) => {
+  return request(`/admin/movies/${movieId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
 export const adminCreateShow = async (token, payload) => {
   return request('/admin/shows', {
     method: 'POST',
@@ -55,6 +62,13 @@ export const adminCreateShow = async (token, payload) => {
 export const adminGetTodayShows = async (token, date) => {
   const query = date ? `?date=${encodeURIComponent(date)}` : '';
   return request(`/admin/shows/today${query}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+export const adminDeleteShow = async (token, showId) => {
+  return request(`/admin/shows/${showId}`, {
+    method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` },
   });
 };

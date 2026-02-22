@@ -16,6 +16,7 @@ import Countries from './pages/Countries';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import SearchResults from './pages/SearchResults';
+import TodayShows from './pages/TodayShows';
 import NotFound from './pages/NotFound';
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
     { path: '/studios', element: <Studios /> },
     { path: '/categories', element: <Categories /> },
     { path: '/countries', element: <Countries /> },
+    { path: '/today-shows', element: <TodayShows /> },
     { path: '/dashboard', element: <Dashboard /> },
     { path: '/admin', element: <AdminDashboard /> },
     { path: '/search', element: <SearchResults /> },

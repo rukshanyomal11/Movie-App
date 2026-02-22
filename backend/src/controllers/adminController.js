@@ -94,6 +94,20 @@ export const listMovies = async (_req, res) => {
   return res.json({ results: movies });
 };
 
+export const deleteMovie = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ message: 'Movie ID is required' });
+  }
+
+  const movie = await Movie.findByIdAndDelete(id);
+  if (!movie) {
+    return res.status(404).json({ message: 'Movie not found' });
+  }
+
+  return res.json({ message: 'Movie deleted successfully' });
+};
+
 export const createShow = async (req, res) => {
   const { movieId, showDate, showTime, pricePerSeat } = req.body || {};
   if (!movieId || !showDate || !showTime || !pricePerSeat) {
@@ -129,6 +143,20 @@ export const listTodayShows = async (req, res) => {
   }));
 
   return res.json({ results });
+};
+
+export const deleteShow = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ message: 'Show ID is required' });
+  }
+
+  const show = await Show.findByIdAndDelete(id);
+  if (!show) {
+    return res.status(404).json({ message: 'Show not found' });
+  }
+
+  return res.json({ message: 'Show deleted successfully' });
 };
 
 export const listBookings = async (_req, res) => {
