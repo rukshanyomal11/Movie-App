@@ -1,4 +1,5 @@
 ﻿import { useEffect, useRef, useState } from 'react';
+import Toast from '../components/common/Toast';
 import {
   adminLogin,
   adminSearchMovies,
@@ -9,9 +10,14 @@ import {
   adminGetTodayShows,
   adminDeleteShow,
   adminGetBookings,
+  adminSearchCustomers,
 } from '../services/adminApi';
 
 const getTodayValue = () => new Date().toISOString().slice(0, 10);
+
+const isAuthError = (err) =>
+  err.status === 401 ||
+  /invalid.*token|expired|unauthorized|missing.*token/i.test(err.message);
 
 const AdminDashboard = () => {
   const [token, setToken] = useState(() => localStorage.getItem('adminToken') || '');
@@ -40,6 +46,14 @@ const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeShow, setActiveShow] = useState(null);
+  const [toastMsg, setToastMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [bookingDate, setBookingDate] = useState(getTodayValue);
+  const [customerQuery, setCustomerQuery] = useState('');
+  const [customerResults, setCustomerResults] = useState([]);
+  const [customerLoading, setCustomerLoading] = useState(false);
+  const [customerError, setCustomerError] = useState('');
+  const customerTimeout = useRef(null);
 
   useEffect(() => {
     if (!token) return;
@@ -47,7 +61,7 @@ const AdminDashboard = () => {
     Promise.all([
       adminGetMovies(token),
       adminGetTodayShows(token, showDate),
-      adminGetBookings(token),
+      adminGetBookings(token, bookingDate),
     ])
       .then(([moviesData, showsData, bookingsData]) => {
         const movies = moviesData.results || [];
@@ -56,9 +70,17 @@ const AdminDashboard = () => {
         setTodayShows(showsData.results || []);
         setBookings(bookingsData.results || []);
       })
-      .catch((error) => setAuthError(error.message))
+      .catch((error) => {
+        if (isAuthError(error)) {
+          localStorage.removeItem('adminToken');
+          setToken('');
+          setToastMsg('Session expired. Please login as admin.');
+        } else {
+          setAuthError(error.message);
+        }
+      })
       .finally(() => setLoading(false));
-  }, [token, showDate]);
+  }, [token, showDate, bookingDate]);
 
   useEffect(() => {
     if (!selectedMovieId && savedMovies.length > 0) {
@@ -76,7 +98,13 @@ const AdminDashboard = () => {
       setSearchResults(data.results || []);
     } catch (error) {
       if (seq !== searchSeq.current) return;
-      setSearchError(error.message);
+      if (isAuthError(error)) {
+        localStorage.removeItem('adminToken');
+        setToken('');
+        setToastMsg('Session expired. Please login as admin.');
+      } else {
+        setSearchError(error.message);
+      }
       setSearchResults([]);
     } finally {
       if (seq === searchSeq.current) {
@@ -129,6 +157,9 @@ const AdminDashboard = () => {
     setSavedMovies([]);
     setTodayShows([]);
     setBookings([]);
+    setCustomerQuery('');
+    setCustomerResults([]);
+    setCustomerError('');
   };
 
   const handleSearch = async (event) => {
@@ -148,7 +179,13 @@ const AdminDashboard = () => {
       setSavedMovies(movies);
       setSavedMovieIds(new Set(movies.map(m => m.imdbId)));
     } catch (error) {
-      setSearchError(error.message);
+      if (isAuthError(error)) {
+        localStorage.removeItem('adminToken');
+        setToken('');
+        setToastMsg('Session expired. Please login as admin.');
+      } else {
+        setSearchError(error.message);
+      }
     }
   };
 
@@ -164,7 +201,13 @@ const AdminDashboard = () => {
         setSelectedMovieId(movies[0]._id);
       }
     } catch (error) {
-      setShowMessage(error.message);
+      if (isAuthError(error)) {
+        localStorage.removeItem('adminToken');
+        setToken('');
+        setToastMsg('Session expired. Please login as admin.');
+      } else {
+        setShowMessage(error.message);
+      }
     }
   };
 
@@ -215,9 +258,42 @@ const AdminDashboard = () => {
       setTodayShows(showsData.results || []);
       closeShowDetails();
     } catch (error) {
-      alert(error.message);
+      if (isAuthError(error)) {
+        localStorage.removeItem('adminToken');
+        setToken('');
+        setToastMsg('Session expired. Please login as admin.');
+      } else {
+        setToastMsg(error.message);
+      }
     }
   };
+
+  useEffect(() => {
+    if (!token) return;
+    const q = customerQuery.trim();
+    if (!q) { setCustomerResults([]); setCustomerError(''); return; }
+    if (customerTimeout.current) clearTimeout(customerTimeout.current);
+    customerTimeout.current = setTimeout(async () => {
+      setCustomerLoading(true);
+      setCustomerError('');
+      try {
+        const data = await adminSearchCustomers(token, q);
+        setCustomerResults(data.results || []);
+      } catch (err) {
+        if (isAuthError(err)) {
+          localStorage.removeItem('adminToken');
+          setToken('');
+          setToastMsg('Session expired. Please login as admin.');
+        } else {
+          setCustomerError(err.message);
+        }
+        setCustomerResults([]);
+      } finally {
+        setCustomerLoading(false);
+      }
+    }, 350);
+    return () => { if (customerTimeout.current) clearTimeout(customerTimeout.current); };
+  }, [customerQuery, token]);
 
   const handleCreateShow = async (event) => {
     event.preventDefault();
@@ -237,7 +313,13 @@ const AdminDashboard = () => {
       const showsData = await adminGetTodayShows(token, showDate);
       setTodayShows(showsData.results || []);
     } catch (error) {
-      setShowMessage(error.message);
+      if (isAuthError(error)) {
+        localStorage.removeItem('adminToken');
+        setToken('');
+        setToastMsg('Session expired. Please login as admin.');
+      } else {
+        setShowMessage(error.message);
+      }
     }
   };
 
@@ -286,13 +368,35 @@ const AdminDashboard = () => {
               required
             />
             <label className="mt-4 block text-xs uppercase tracking-[0.3em] text-slate-500">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm text-slate-700 focus:border-amber-400/60 focus:outline-none dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
-              required
-            />
+            <div className="relative mt-2">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="w-full rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 pr-11 text-sm text-slate-700 focus:border-amber-400/60 focus:outline-none dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute inset-y-0 right-3 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none"
+                tabIndex={-1}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  // Eye-off icon
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-5 0-9-4-9-7a9.77 9.77 0 012.083-3.083M6.343 6.343A9.956 9.956 0 0112 5c5 0 9 4 9 7a9.77 9.77 0 01-1.343 2.657M6.343 6.343L3 3m3.343 3.343L12 9m5.657 5.657L21 21m-3.343-3.343L12 15m0 0a3 3 0 01-3-3m3 3a3 3 0 003-3m-3 3v.01" />
+                  </svg>
+                ) : (
+                  // Eye icon
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                )}
+              </button>
+            </div>
             {authError && <p className="mt-3 text-sm text-red-500">{authError}</p>}
             <button
               type="submit"
@@ -577,9 +681,28 @@ const AdminDashboard = () => {
           <section className="section-block">
             <div className="section-heading">
               <h2 className="section-title">Bookings</h2>
-              <span className="badge">Latest</span>
+              <span className="badge">{bookingDate === getTodayValue() ? 'Today' : bookingDate}</span>
             </div>
             <div className="soft-panel">
+              <div className="mb-4 flex flex-wrap items-center gap-3">
+                <label className="text-xs uppercase tracking-[0.3em] text-slate-500">Filter by date</label>
+                <input
+                  type="date"
+                  value={bookingDate}
+                  max={getTodayValue()}
+                  onChange={(e) => setBookingDate(e.target.value)}
+                  className="rounded-xl border border-slate-200/70 bg-white/80 px-3 py-2 text-sm text-slate-700 focus:border-amber-400/60 focus:outline-none dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
+                />
+                {bookingDate !== getTodayValue() && (
+                  <button
+                    type="button"
+                    onClick={() => setBookingDate(getTodayValue())}
+                    className="rounded-full border border-slate-200/70 px-3 py-1.5 text-xs uppercase tracking-[0.3em] text-slate-600 hover:border-amber-400/60 hover:text-slate-900 dark:border-white/10 dark:text-white/70"
+                  >
+                    Back to Today
+                  </button>
+                )}
+              </div>
               {bookings.length === 0 && <p className="text-sm">No bookings yet.</p>}
               {bookings.length > 0 && (
                 <div className="space-y-4">
@@ -616,6 +739,62 @@ const AdminDashboard = () => {
                         <div>
                           <span className="font-semibold">Total Amount:</span> Rs. {booking.totalAmount}
                         </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+
+          <section className="section-block">
+            <div className="section-heading">
+              <h2 className="section-title">Customer Search</h2>
+              <span className="badge">Lookup</span>
+            </div>
+            <div className="soft-panel">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search by name, email or phone..."
+                  value={customerQuery}
+                  onChange={(e) => setCustomerQuery(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 pr-10 text-sm text-slate-700 focus:border-amber-400/60 focus:outline-none dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-100"
+                />
+                {customerLoading && (
+                  <span className="absolute inset-y-0 right-3 flex items-center">
+                    <svg className="h-4 w-4 animate-spin text-amber-400" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                    </svg>
+                  </span>
+                )}
+              </div>
+              {customerError && <p className="mt-3 text-sm text-red-500">{customerError}</p>}
+              {!customerLoading && customerQuery.trim() && customerResults.length === 0 && !customerError && (
+                <p className="mt-4 text-sm text-slate-500">No customers found for &ldquo;{customerQuery}&rdquo;.</p>
+              )}
+              {customerResults.length > 0 && (
+                <div className="mt-4 space-y-4">
+                  {customerResults.map((booking) => (
+                    <div key={booking._id} className="rounded-xl border border-slate-200/60 p-4 dark:border-white/10">
+                      <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{booking.customerName}</p>
+                          <p className="mt-0.5 text-xs text-slate-500">{booking.customerEmail}</p>
+                          {booking.customerPhone && (
+                            <p className="text-xs text-slate-500">{booking.customerPhone}</p>
+                          )}
+                        </div>
+                        <span className="rounded-full bg-amber-400/10 px-3 py-1 text-xs font-mono font-semibold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-300">
+                          {booking.bookingCode}
+                        </span>
+                      </div>
+                      <div className="grid gap-2 text-xs text-slate-600 dark:text-slate-300 sm:grid-cols-2">
+                        <div><span className="font-semibold">Movie:</span> {booking.movie?.title}</div>
+                        <div><span className="font-semibold">Seats:</span> {booking.seats?.join(', ')}</div>
+                        <div><span className="font-semibold">Total:</span> Rs. {booking.totalAmount}</div>
+                        <div><span className="font-semibold">Date:</span> {new Date(booking.createdAt).toLocaleString()}</div>
                       </div>
                     </div>
                   ))}
@@ -785,6 +964,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
+      <Toast message={toastMsg} onClose={() => setToastMsg('')} />
     </div>
   );
 };

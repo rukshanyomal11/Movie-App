@@ -159,8 +159,34 @@ export const deleteShow = async (req, res) => {
   return res.json({ message: 'Show deleted successfully' });
 };
 
-export const listBookings = async (_req, res) => {
-  const bookings = await Booking.find().populate('movie').populate('show').sort({ createdAt: -1 });
+export const listBookings = async (req, res) => {
+  const { start, end } = getDateRange(req.query.date);
+  const bookings = await Booking.find({ createdAt: { $gte: start, $lte: end } })
+    .populate('movie')
+    .populate('show')
+    .sort({ createdAt: -1 });
+  return res.json({ results: bookings });
+};
+
+export const searchCustomers = async (req, res) => {
+  const q = (req.query.q || '').trim();
+  if (!q) {
+    return res.status(400).json({ message: 'Search query is required' });
+  }
+
+  const regex = new RegExp(q, 'i');
+  const bookings = await Booking.find({
+    $or: [
+      { customerName: regex },
+      { customerEmail: regex },
+      { customerPhone: regex },
+    ],
+  })
+    .populate('movie')
+    .populate('show')
+    .sort({ createdAt: -1 })
+    .limit(50);
+
   return res.json({ results: bookings });
 };
 

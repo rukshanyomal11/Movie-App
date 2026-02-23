@@ -11,6 +11,7 @@ import {
   listTodayShows,
   deleteShow,
   listBookings,
+  searchCustomers,
 } from '../controllers/adminController.js';
 
 const router = express.Router();
@@ -24,6 +25,7 @@ router.post('/shows', adminAuth, asyncHandler(createShow));
 router.get('/shows/today', adminAuth, asyncHandler(listTodayShows));
 router.delete('/shows/:id', adminAuth, asyncHandler(deleteShow));
 router.get('/bookings', adminAuth, asyncHandler(listBookings));
+router.get('/customers/search', adminAuth, asyncHandler(searchCustomers));
 
 export default router;
 

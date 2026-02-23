@@ -5,7 +5,9 @@ const request = async (path, options = {}) => {
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     const message = data?.message || 'Request failed';
-    throw new Error(message);
+    const err = new Error(message);
+    err.status = response.status;
+    throw err;
   }
   return data;
 };
@@ -73,8 +75,15 @@ export const adminDeleteShow = async (token, showId) => {
   });
 };
 
-export const adminGetBookings = async (token) => {
-  return request('/admin/bookings', {
+export const adminGetBookings = async (token, date) => {
+  const query = date ? `?date=${encodeURIComponent(date)}` : '';
+  return request(`/admin/bookings${query}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+export const adminSearchCustomers = async (token, q) => {
+  return request(`/admin/customers/search?q=${encodeURIComponent(q)}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
