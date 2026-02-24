@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../components/common/Loading';
 import Error from '../components/common/Error';
@@ -10,6 +10,7 @@ import { formatDate, formatRating } from '../utils/formatters';
 
 const MovieDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { details, videos, status, error } = useSelector((state) => state.movies);
   const movie = details[id];
@@ -32,6 +33,14 @@ const MovieDetail = () => {
 
   return (
     <div className="page-shell">
+      <div className="px-4 pt-6 sm:px-6 lg:px-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 rounded-full border border-slate-200/70 bg-white/70 px-4 py-2 text-xs uppercase tracking-[0.3em] text-slate-600 transition hover:border-slate-300 hover:text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-white/80 dark:hover:border-amber-400/50 dark:hover:text-white"
+        >
+          <span>&#8592;</span> Back
+        </button>
+      </div>
       <div className="page-hero">
         <div className="flex flex-col gap-8 lg:flex-row">
           <img

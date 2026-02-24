@@ -11,7 +11,6 @@ import Directors from './pages/Directors';
 import DirectorDetail from './pages/DirectorDetail';
 import Trailers from './pages/Trailers';
 import Studios from './pages/Studios';
-import Categories from './pages/Categories';
 import Countries from './pages/Countries';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
@@ -30,7 +29,6 @@ const App = () => {
     { path: '/director/:id', element: <DirectorDetail /> },
     { path: '/trailers', element: <Trailers /> },
     { path: '/studios', element: <Studios /> },
-    { path: '/categories', element: <Categories /> },
     { path: '/countries', element: <Countries /> },
     { path: '/today-shows', element: <TodayShows /> },
     { path: '/dashboard', element: <Dashboard /> },

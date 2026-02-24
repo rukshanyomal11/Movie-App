@@ -41,9 +41,6 @@ const Footer = () => {
               <Link to="/directors" className="transition hover:text-slate-900 dark:hover:text-white">
                 Directors
               </Link>
-              <Link to="/categories" className="transition hover:text-slate-900 dark:hover:text-white">
-                Categories
-              </Link>
             </div>
           </div>
 
