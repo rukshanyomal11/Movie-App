@@ -16,6 +16,8 @@ import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import SearchResults from './pages/SearchResults';
 import TodayShows from './pages/TodayShows';
+import Men from './pages/Men';
+import Women from './pages/Women';
 import NotFound from './pages/NotFound';
 
 const App = () => {
@@ -31,6 +33,8 @@ const App = () => {
     { path: '/studios', element: <Studios /> },
     { path: '/countries', element: <Countries /> },
     { path: '/today-shows', element: <TodayShows /> },
+    { path: '/men', element: <Men /> },
+    { path: '/women', element: <Women /> },
     { path: '/dashboard', element: <Dashboard /> },
     { path: '/admin', element: <AdminDashboard /> },
     { path: '/search', element: <SearchResults /> },

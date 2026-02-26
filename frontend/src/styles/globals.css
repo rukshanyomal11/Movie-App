@@ -19,6 +19,10 @@
     --accent: #f59e0b;
     --accent-strong: #b45309;
     --accent-soft: rgba(251, 191, 36, 0.25);
+    --badge-border: rgba(245, 158, 11, 0.35);
+    --badge-bg: rgba(245, 158, 11, 0.12);
+    --badge-text: var(--accent-strong);
+    --glow: rgba(245, 158, 11, 0.6);
     --shadow-hero: 0 35px 80px -60px rgba(15, 23, 42, 0.35);
     --shadow-card: 0 28px 70px -45px rgba(15, 23, 42, 0.35);
     --shadow-panel: 0 24px 60px -45px rgba(15, 23, 42, 0.2);
@@ -53,6 +57,10 @@
     --accent: #fbbf24;
     --accent-strong: #f59e0b;
     --accent-soft: rgba(251, 191, 36, 0.18);
+    --badge-border: rgba(251, 191, 36, 0.35);
+    --badge-bg: rgba(251, 191, 36, 0.12);
+    --badge-text: #fde68a;
+    --glow: rgba(251, 191, 36, 0.55);
     --shadow-hero: 0 40px 90px -60px rgba(0, 0, 0, 0.85);
     --shadow-card: 0 30px 70px -45px rgba(0, 0, 0, 0.75);
     --shadow-panel: 0 28px 70px -55px rgba(0, 0, 0, 0.75);
@@ -89,6 +97,46 @@
     @apply container mx-auto px-5 sm:px-8 lg:px-12 py-12 lg:py-16;
   }
 
+  .women-page {
+    --accent: #f472b6;
+    --accent-strong: #be185d;
+    --accent-soft: rgba(244, 114, 182, 0.25);
+    --badge-border: rgba(244, 114, 182, 0.35);
+    --badge-bg: rgba(244, 114, 182, 0.12);
+    --badge-text: #be185d;
+    --glow: rgba(244, 114, 182, 0.55);
+  }
+
+  html.dark .women-page {
+    --accent: #f9a8d4;
+    --accent-strong: #f9a8d4;
+    --accent-soft: rgba(249, 168, 212, 0.2);
+    --badge-border: rgba(249, 168, 212, 0.35);
+    --badge-bg: rgba(249, 168, 212, 0.12);
+    --badge-text: #fbcfe8;
+    --glow: rgba(249, 168, 212, 0.55);
+  }
+
+  .men-page {
+    --accent: #38bdf8;
+    --accent-strong: #0369a1;
+    --accent-soft: rgba(56, 189, 248, 0.2);
+    --badge-border: rgba(56, 189, 248, 0.35);
+    --badge-bg: rgba(56, 189, 248, 0.12);
+    --badge-text: #0369a1;
+    --glow: rgba(56, 189, 248, 0.55);
+  }
+
+  html.dark .men-page {
+    --accent: #7dd3fc;
+    --accent-strong: #38bdf8;
+    --accent-soft: rgba(125, 211, 252, 0.2);
+    --badge-border: rgba(125, 211, 252, 0.35);
+    --badge-bg: rgba(125, 211, 252, 0.12);
+    --badge-text: #bae6fd;
+    --glow: rgba(125, 211, 252, 0.55);
+  }
+
   .page-hero {
     @apply relative overflow-hidden rounded-[32px] border p-8 backdrop-blur sm:p-10 lg:p-12;
     border-color: var(--border);
@@ -104,6 +152,30 @@
       radial-gradient(500px 300px at 20% 0%, rgba(251, 191, 36, 0.14), transparent 60%),
       radial-gradient(600px 400px at 100% 20%, rgba(59, 130, 246, 0.12), transparent 60%);
     opacity: 0.8;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .women-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(420px 280px at 80% 15%, rgba(244, 114, 182, 0.25), transparent 60%),
+      radial-gradient(480px 320px at 0% 100%, rgba(251, 191, 36, 0.2), transparent 65%);
+    opacity: 0.85;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .men-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(420px 280px at 85% 10%, rgba(56, 189, 248, 0.25), transparent 60%),
+      radial-gradient(500px 320px at 0% 100%, rgba(37, 99, 235, 0.18), transparent 65%);
+    opacity: 0.85;
     pointer-events: none;
     z-index: 0;
   }
@@ -155,20 +227,14 @@
 
   .badge {
     @apply inline-flex items-center rounded-full border px-3 py-1 text-[10px] uppercase tracking-[0.25em];
-    border-color: rgba(245, 158, 11, 0.35);
-    background: rgba(245, 158, 11, 0.12);
-    color: var(--accent-strong);
-  }
-
-  html.dark .badge {
-    border-color: rgba(251, 191, 36, 0.35);
-    background: rgba(251, 191, 36, 0.12);
-    color: #fde68a;
+    border-color: var(--badge-border);
+    background: var(--badge-bg);
+    color: var(--badge-text);
   }
 
   .glow-divider {
     @apply h-px w-full;
-    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.6), transparent);
+    background: linear-gradient(90deg, transparent, var(--glow), transparent);
   }
 
   .grid-cards {

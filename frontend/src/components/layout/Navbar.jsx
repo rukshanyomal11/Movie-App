@@ -14,6 +14,8 @@ const Navbar = ({ theme, toggleTheme }) => {
     { to: '/actors', label: 'Actors' },
     { to: '/directors', label: 'Directors' },
     { to: '/today-shows', label: 'Today Shows' },
+    { to: '/men', label: 'Men' },
+    { to: '/women', label: 'Women' },
     { to: '/admin', label: 'Admin' },
   ];
 
